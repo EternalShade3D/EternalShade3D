@@ -11,7 +11,7 @@ import hashlib
 # Repository permissions: read:Commit statuses, read:Contents, read:Issues, read:Metadata, read:Pull Requests
 # Issues and pull requests permissions not needed at the moment, but may be used in the future
 HEADERS = {'authorization': 'token '+ os.environ['ACCESS_TOKEN']}
-USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
+USER_NAME = os.environ['USER_NAME'] # 'EternalShade3D'
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
@@ -439,7 +439,7 @@ def formatter(query_type, difference, funct_return=False, whitespace=0):
 
 if __name__ == '__main__':
     """
-    Andrew Grant (Andrew6rant), 2022-2025
+    EternalShade3D (Eternal 3D Solutions), 2022-2025
     """
     print('Calculation times:')
     # define global variable for owner ID and calculate user's creation date
@@ -447,7 +447,14 @@ if __name__ == '__main__':
     user_data, user_time = perf_counter(user_getter, USER_NAME)
     OWNER_ID, acc_date = user_data
     formatter('account data', user_time)
-    age_data, age_time = perf_counter(daily_readme, datetime.datetime(2002, 7, 5))
+    # BIRTHDAY TODO: replace 2002-07-05 with EternalShade3D's real birthdate (set BIRTHDAY env or hardcode)
+    # Reads from the BIRTHDAY env var (format 'YYYY-MM-DD'); falls back to a placeholder if unset.
+    birthday_env = os.environ.get('BIRTHDAY')
+    if birthday_env:
+        BIRTHDAY = datetime.datetime.strptime(birthday_env, '%Y-%m-%d')
+    else:
+        BIRTHDAY = datetime.datetime(2002, 7, 5)  # PLACEHOLDER - NOT EternalShade3D's real birthday; set BIRTHDAY env
+    age_data, age_time = perf_counter(daily_readme, BIRTHDAY)
     formatter('age calculation', age_time)
     total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
     formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
@@ -457,8 +464,10 @@ if __name__ == '__main__':
     contrib_data, contrib_time = perf_counter(graph_repos_stars, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
     follower_data, follower_time = perf_counter(follower_getter, USER_NAME)
 
-    # several repositories that I've contributed to have since been deleted.
-    if OWNER_ID == {'id': 'MDQ6VXNlcjU3MzMxMTM0'}: # only calculate for user Andrew6rant
+    # Andrew-specific archive logic: several repositories I've contributed to have since been deleted.
+    # This only applies to Andrew6rant's account and is intentionally DISABLED for all other users
+    # (e.g. EternalShade3D). Do NOT silently embed Andrew's OWNER_ID logic for other accounts.
+    if USER_NAME == 'Andrew6rant':  # archive calculation is Andrew6rant-specific; no-op for other users
         archived_data = add_archive()
         for index in range(len(total_loc)-1):
             total_loc[index] += archived_data[index]
