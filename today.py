@@ -15,17 +15,18 @@ USER_NAME = os.environ['USER_NAME'] # 'EternalShade3D'
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
-def daily_readme(birthday):
+def daily_readme(since_date):
     """
-    Returns the length of time since I was born
+    Returns the length of time since the given date (GitHub account creation date).
+    This is the "Uptime" of the account. It is NOT derived from any birthdate.
     e.g. 'XX years, XX months, XX days'
     """
-    diff = relativedelta.relativedelta(datetime.datetime.today(), birthday)
+    diff = relativedelta.relativedelta(datetime.datetime.today(), since_date)
     return '{} {}, {} {}, {} {}{}'.format(
         diff.years, 'year' + format_plural(diff.years), 
         diff.months, 'month' + format_plural(diff.months), 
         diff.days, 'day' + format_plural(diff.days),
-        ' 🎂' if (diff.months == 0 and diff.days == 0) else '')
+        ' 🎉' if (diff.months == 0 and diff.days == 0) else '')
 
 
 def format_plural(unit):
@@ -322,6 +323,7 @@ def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, contrib
     """
     tree = etree.parse(filename)
     root = tree.getroot()
+    justify_format(root, 'age_data', age_data, 22)
     justify_format(root, 'commit_data', commit_data, 22)
     justify_format(root, 'star_data', star_data, 14)
     justify_format(root, 'repo_data', repo_data, 6)
@@ -447,15 +449,12 @@ if __name__ == '__main__':
     user_data, user_time = perf_counter(user_getter, USER_NAME)
     OWNER_ID, acc_date = user_data
     formatter('account data', user_time)
-    # BIRTHDAY TODO: replace 2002-07-05 with EternalShade3D's real birthdate (set BIRTHDAY env or hardcode)
-    # Reads from the BIRTHDAY env var (format 'YYYY-MM-DD'); falls back to a placeholder if unset.
-    birthday_env = os.environ.get('BIRTHDAY')
-    if birthday_env:
-        BIRTHDAY = datetime.datetime.strptime(birthday_env, '%Y-%m-%d')
-    else:
-        BIRTHDAY = datetime.datetime(2002, 7, 5)  # PLACEHOLDER - NOT EternalShade3D's real birthday; set BIRTHDAY env
-    age_data, age_time = perf_counter(daily_readme, BIRTHDAY)
-    formatter('age calculation', age_time)
+    # "Uptime" = time since the GitHub account was created. This is NOT a birthdate
+    # and must never display any age derived from the user's real birthdate.
+    # acc_date is an ISO 8601 timestamp from the GitHub API, e.g. '2018-06-07T07:26:59Z'.
+    account_created = datetime.datetime.strptime(acc_date, '%Y-%m-%dT%H:%M:%SZ')
+    age_data, age_time = perf_counter(daily_readme, account_created)
+    formatter('account uptime', age_time)
     total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
     formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
     commit_data, commit_time = perf_counter(commit_counter, 7)
