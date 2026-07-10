@@ -44,12 +44,19 @@ def sdots(n):
     if n < 1: n = 1
     return ' ' + ('.'*n) + ' '
 
-# Both stat lines share the SAME start-column for the RIGHT label (L2) by construction,
-# and the whole line totals TOTAL (61). col = the fixed column where L2 begins.
-def stat2(y, L1, v1, L2, v2, col, bracket=None):
+# GitHub Stats LOC suffix (visible length drives the LOC dot count).
+LOC_SUFFIX = ' ( 73,877++ | 4,165-- )'
+# Column where '(' sits on the LOC line == column where the '⟩' separators must sit
+# on the two paired stat lines, so all three lines align vertically.
+SEP_COL = TOTAL - len(LOC_SUFFIX) + 1
+
+def stat2(y, L1, v1, L2, v2, bracket=None):
     btxt = f' [{bracket[0]}: {bracket[1]}]' if bracket else ''
-    d1 = col - 8 - len(L1) - len(v1) - len(btxt)          # dots between L1:v1 and ' ⟩ '
-    d2 = TOTAL - col - len(L2) - len(v2) - 3              # dots between L2: and v2
+    # separator '⟩' must sit at SEP_COL (== LOC '(' column). Fixed chars before it:
+    # '⟩ '(2) + L1 + ':'(1) + sdots(d1) + v1 + btxt  => '⟩' col = 6 + L1 + d1 + v1 + btxt
+    d1 = SEP_COL - 6 - len(L1) - len(v1) - len(btxt)
+    # total width 61: d1 + d2 = 50 - (L1+v1+btxt+L2+v2)
+    d2 = 50 - (len(L1)+len(v1)+len(btxt)+len(L2)+len(v2)) - d1
     if d1 < 1: d1 = 1
     if d2 < 1: d2 = 1
     return (f'<tspan x="{XK}" y="{y}" class="cc">⟩ </tspan>'
@@ -62,8 +69,7 @@ def stat2(y, L1, v1, L2, v2, col, bracket=None):
 
 def stat_loc(y):
     L='Lines of Code on GitHub'; v='69,712'
-    vis_suffix=' ( 73,877++ | 4,165-- )'   # visible-char length drives dot count; color spans below
-    d = TOTAL - (2 + len(L) + 1 + 2 + len(v) + len(vis_suffix))
+    d = TOTAL - (2 + len(L) + 1 + 2 + len(v) + len(LOC_SUFFIX))
     if d < 1: d = 1
     return (f'<tspan x="{XK}" y="{y}" class="cc">⟩ </tspan>'
             f'<tspan class="key">{L}</tspan>:{sdots(d)}'
@@ -97,8 +103,8 @@ rows = [
  field(450,'Website','eternal3d.carrd.co'),
  field(470,'Email','eternalshadeon@gmail.com'),
  section(510,'GitHub Stats'),
- stat2(530,'Repos','14','Stars','3', 38, bracket=('Contributed','16')),
- stat2(550,'Commits','76','Followers','0', 38),
+ stat2(530,'Repos','14','Stars','3', bracket=('Contributed','16')),
+ stat2(550,'Commits','76','Followers','0'),
  stat_loc(570),
 ]
 panel = f'<text x="{XK}" y="30" fill="#c9d1d9">\n'+'\n'.join(rows)+'\n</text>'
