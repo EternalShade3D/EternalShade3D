@@ -1,6 +1,6 @@
 import re, xml.dom.minidom as M
 
-BRAILLE_LOGO = r"C:\Users\Eternal\github_preview\logo_braille_50x25.txt"
+BRAILLE_LOGO = r"C:\Users\Eternal\github_preview\Shadeon_LOGO_01_braille_40x20_shave5.txt"
 
 XK=390
 DASH='—'*47
@@ -103,20 +103,17 @@ panel = f'<text x="{XK}" y="30" fill="#c9d1d9">\n'+'\n'.join(rows)+'\n</text>'
 
 BRAILLE_BLANK='\u2800'
 def prep_logo(path):
+    # Read file 1:1. Crop ONLY surrounding blank rows/cols so the art starts
+    # at the first available column/row. No padding rows, no empty tspans.
     raw=open(path,encoding='utf-8').read().split('\n')
     if raw and raw[-1]=='': raw.pop()
     def blank(c): return c==BRAILLE_BLANK or c==' '
     rows=[i for i,l in enumerate(raw) if any(not blank(c) for c in l)]
-    if not rows: return ['']
+    if not rows: return []
     r0,r1=rows[0],rows[-1]
     cols=[j for i in range(r0,r1+1) for j,c in enumerate(raw[i]) if not blank(c)]
     c0,c1=min(cols),max(cols)
-    cropped=[raw[i][c0:c1+1] for i in range(r0,r1+1)]
-    PW,PH=3,2
-    w=c1-c0+1
-    pad_row=' '*(w+2*PW)
-    mid=[' '*PW + l + ' '*PW for l in cropped]
-    return [pad_row]*PH + mid + [pad_row]*PH
+    return [raw[i][c0:c1+1] for i in range(r0,r1+1)]
 
 specs=[
  (r"C:\Users\Eternal\github_preview\reference\dark_mode.svg", r"C:\Users\Eternal\github_preview\eternal3d\dark_mode.svg", BRAILLE_LOGO),
@@ -124,11 +121,8 @@ specs=[
 ]
 for src,dst,lg in specs:
     logo_lines=prep_logo(lg)
-    N=25
-    pad=(N-len(logo_lines))//2
-    if pad<0: pad=0; logo_lines=logo_lines[:N]
-    full=['']*pad + logo_lines + ['']*max(0,N-pad-len(logo_lines))
-    logo_tspans='\n'.join(f'<tspan x="15" y="{30+i*20}">{l}</tspan>' for i,l in enumerate(full))
+    # x="15" lives ONLY on <text>; tspans inherit it (no double x).
+    logo_tspans='\n'.join(f'<tspan y="{30+i*20}">{l}</tspan>' for i,l in enumerate(logo_lines))
     logo=f'<text x="15" y="30" fill="#c9d1d9" class="ascii">\n{logo_tspans}\n</text>'
     t=open(src).read()
     t=re.sub(r'<text[^>]*class="ascii"[^>]*>.*?</text>', logo, t, count=1, flags=re.S)
