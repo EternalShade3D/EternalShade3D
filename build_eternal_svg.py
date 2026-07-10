@@ -42,10 +42,10 @@ def section(y, title):
 
 def sdots(n):
     if n < 1: n = 1
-    return ' ' + ('.'*n) + ' '
+    return f'<tspan class="cc"> {"."*n} </tspan>'
 
 # GitHub Stats LOC suffix (visible length drives the LOC dot count).
-LOC_SUFFIX = ' ( 73,877++ | 4,165-- )'
+LOC_SUFFIX = ' ⟩ 73,877++ | 4,165--'
 # Column where '(' sits on the LOC line == column where the '⟩' separators must sit
 # on the two paired stat lines, so all three lines align vertically.
 SEP_COL = TOTAL - len(LOC_SUFFIX) + 1
@@ -63,7 +63,7 @@ def stat2(y, L1, v1, L2, v2, bracket=None):
             f'<tspan class="key">{L1}</tspan>:{sdots(d1)}'
             f'<tspan class="value" id="{L1.lower()}_data">{v1}</tspan>'
             + (f' [<tspan class="key">{bracket[0]}</tspan>: <tspan class="value" id="{bracket[0].lower()}_data">{bracket[1]}</tspan>]' if bracket else '')
-            + f' ⟩ <tspan class="key">{L2}</tspan>:{sdots(d2)}'
+            + f'<tspan class="cc"> ⟩ </tspan><tspan class="key">{L2}</tspan>:{sdots(d2)}'
             f'<tspan class="cc" id="{L2.lower()}_data_dots"></tspan>'
             f'<tspan class="value" id="{L2.lower()}_data">{v2}</tspan>')
 
@@ -75,8 +75,10 @@ def stat_loc(y):
             f'<tspan class="key">{L}</tspan>:{sdots(d)}'
             f'<tspan class="cc" id="loc_data_dots"></tspan>'
             f'<tspan class="value" id="loc_data">{v}</tspan>'
-            f' ( <tspan class="addColor" id="loc_add">73,877</tspan><tspan class="addColor">++</tspan> | '
-            f'<tspan class="delColor" id="loc_del">4,165</tspan><tspan class="delColor">--</tspan> )')
+            f'<tspan class="cc"> ⟩ </tspan>'
+            f'<tspan class="addColor" id="loc_add">73,877</tspan><tspan class="addColor">++</tspan>'
+            f'<tspan class="cc"> | </tspan>'
+            f'<tspan class="delColor" id="loc_del">4,165</tspan><tspan class="delColor">--</tspan>')
 
 # --- row by row, explicit ---
 rows = [
