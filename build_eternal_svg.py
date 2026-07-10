@@ -12,7 +12,7 @@ def load_logo(path):
 XK=390
 DASH='—'*47
 CANVAS_W=985
-CANVAS_H=590
+CANVAS_H=530
 
 # EVERY line (content rows + title bars) = exactly TOTAL characters.
 # Content row = '⟩ '(2) + label + ':' + ' '+dots+' ' + value  => dots = TOTAL-5-len(label)-len(value)
