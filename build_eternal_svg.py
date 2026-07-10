@@ -121,9 +121,9 @@ specs=[
 ]
 for src,dst,lg in specs:
     logo_lines=prep_logo(lg)
-    # x="15" lives ONLY on <text>; tspans inherit it (no double x).
-    logo_tspans='\n'.join(f'<tspan y="{30+i*20}">{l}</tspan>' for i,l in enumerate(logo_lines))
-    logo=f'<text x="15" y="30" fill="#c9d1d9" class="ascii">\n{logo_tspans}\n</text>'
+    # each tspan needs x="15" (absolute, overrides text x; does NOT sum) so rows stack at col 15
+    logo_tspans='\n'.join(f'<tspan x="15" y="{90+i*20}">{l}</tspan>' for i,l in enumerate(logo_lines))
+    logo=f'<text x="15" y="90" fill="#c9d1d9" class="ascii">\n{logo_tspans}\n</text>'
     t=open(src).read()
     t=re.sub(r'<text[^>]*class="ascii"[^>]*>.*?</text>', logo, t, count=1, flags=re.S)
     t=re.sub(r'<text x="390"[^>]*>.*?</text>', panel, t, count=1, flags=re.S)
