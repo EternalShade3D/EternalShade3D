@@ -1,7 +1,7 @@
 import re, xml.dom.minidom as M
 
-DARK_LOGO = r"C:\Users\Eternal\github_preview\assets_logo_neg.txt"
-LIGHT_LOGO = r"C:\Users\Eternal\github_preview\assets_logo_normal.txt"
+DARK_LOGO = r"C:\Users\Eternal\github_preview\eternal3d\assets_logo_neg.txt"
+LIGHT_LOGO = r"C:\Users\Eternal\github_preview\eternal3d\assets_logo_normal.txt"
 
 def load_logo(path):
     L=[l.rstrip('\n') for l in open(path).read().split('\n')]
@@ -80,7 +80,7 @@ def stat_loc(y):
             f'<tspan class="cc"> | </tspan>'
             f'<tspan class="delColor" id="loc_del">4,165</tspan><tspan class="delColor">--</tspan>')
 
-# --- row by row, explicit ---
+# --- row by row, explicit (23 rows, ends y=510 to match reference) ---
 rows = [
  section(30,'EternalShade3D'),
  field(50,'OS','Windows 11, Android'),
@@ -96,18 +96,15 @@ rows = [
  field(250,'Interests.Tech','AI, Hermes Agent'),
  field(270,'Tools.Extra','AntiGravity, Hermes Agent'),
  section(310,'Contact'),
- field(330,'Twitter','@EternalShade3D'),
- field(350,'Instagram','@eternal.shade3d'),
- field(370,'TikTok','@eternal.shadeon'),
- field(390,'YouTube','@EternalShade3D'),
- field(410,'LinkedIn','marcio3drodrigues'),
- field(430,'Behance','Eternal3DSolutions'),
- field(450,'Website','eternal3d.carrd.co'),
- field(470,'Email','eternalshadeon@gmail.com'),
- section(510,'GitHub Stats'),
- stat2(530,'Repos','14','Stars','3', bracket=('Contributed','16')),
- stat2(550,'Commits','76','Followers','0'),
- stat_loc(570),
+ field(330,'Instagram','@eternal.shade3d'),
+ field(350,'TikTok','@eternal.shadeon'),
+ field(370,'LinkedIn','marcio3drodrigues'),
+ field(390,'Website','eternal3d.carrd.co'),
+ field(410,'Email','eternalshadeon@gmail.com'),
+ section(450,'GitHub Stats'),
+ stat2(470,'Repos','14','Stars','3', bracket=('Contributed','16')),
+ stat2(490,'Commits','76','Followers','0'),
+ stat_loc(510),
 ]
 panel = f'<text x="{XK}" y="30" fill="#c9d1d9">\n'+'\n'.join(rows)+'\n</text>'
 
