@@ -1,13 +1,6 @@
 import re, xml.dom.minidom as M
 
-DARK_LOGO = r"C:\Users\Eternal\github_preview\eternal3d\assets_logo_neg.txt"
-LIGHT_LOGO = r"C:\Users\Eternal\github_preview\eternal3d\assets_logo_normal.txt"
-
-def load_logo(path):
-    L=[l.rstrip('\n') for l in open(path).read().split('\n')]
-    while L and L[0].strip()=='': L.pop(0)
-    while L and L[-1].strip()=='': L.pop()
-    return L
+BRAILLE_LOGO = r"C:\Users\Eternal\github_preview\logo_braille_50x25.txt"
 
 XK=390
 DASH='—'*47
@@ -32,7 +25,7 @@ def field(y, label, val, dyn=None):
             f'<tspan class="value"{vid}>{val}</tspan>')
 
 def empty(y):
-    return f'<tspan x="{XK}" y="{y}" class="cc">⟩ </tspan>'
+    return f'<tspan x="{XK}" y="{y}"></tspan>'
 
 def section(y, title):
     td = TOTAL - 2 - len(title)      # total dash chars
@@ -108,16 +101,33 @@ rows = [
 ]
 panel = f'<text x="{XK}" y="30" fill="#c9d1d9">\n'+'\n'.join(rows)+'\n</text>'
 
+BRAILLE_BLANK='\u2800'
+def prep_logo(path):
+    raw=open(path,encoding='utf-8').read().split('\n')
+    if raw and raw[-1]=='': raw.pop()
+    def blank(c): return c==BRAILLE_BLANK or c==' '
+    rows=[i for i,l in enumerate(raw) if any(not blank(c) for c in l)]
+    if not rows: return ['']
+    r0,r1=rows[0],rows[-1]
+    cols=[j for i in range(r0,r1+1) for j,c in enumerate(raw[i]) if not blank(c)]
+    c0,c1=min(cols),max(cols)
+    cropped=[raw[i][c0:c1+1] for i in range(r0,r1+1)]
+    PW,PH=3,2
+    w=c1-c0+1
+    pad_row=' '*(w+2*PW)
+    mid=[' '*PW + l + ' '*PW for l in cropped]
+    return [pad_row]*PH + mid + [pad_row]*PH
+
 specs=[
- (r"C:\Users\Eternal\github_preview\reference\dark_mode.svg", r"C:\Users\Eternal\github_preview\eternal3d\dark_mode.svg", DARK_LOGO),
- (r"C:\Users\Eternal\github_preview\reference\light_mode.svg", r"C:\Users\Eternal\github_preview\eternal3d\light_mode.svg", LIGHT_LOGO),
+ (r"C:\Users\Eternal\github_preview\reference\dark_mode.svg", r"C:\Users\Eternal\github_preview\eternal3d\dark_mode.svg", BRAILLE_LOGO),
+ (r"C:\Users\Eternal\github_preview\reference\light_mode.svg", r"C:\Users\Eternal\github_preview\eternal3d\light_mode.svg", BRAILLE_LOGO),
 ]
 for src,dst,lg in specs:
-    logo_lines=load_logo(lg)
-    N=28
+    logo_lines=prep_logo(lg)
+    N=25
     pad=(N-len(logo_lines))//2
     if pad<0: pad=0; logo_lines=logo_lines[:N]
-    full=['']*pad + logo_lines + ['']*(N-pad-len(logo_lines))
+    full=['']*pad + logo_lines + ['']*max(0,N-pad-len(logo_lines))
     logo_tspans='\n'.join(f'<tspan x="15" y="{30+i*20}">{l}</tspan>' for i,l in enumerate(full))
     logo=f'<text x="15" y="30" fill="#c9d1d9" class="ascii">\n{logo_tspans}\n</text>'
     t=open(src).read()
