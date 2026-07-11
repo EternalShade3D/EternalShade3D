@@ -33,12 +33,20 @@ def section(y, title):
     sr = td - sl
     return f'<tspan x="{XK}" y="{y}">{"—"*sl} {title} {"—"*sr}</tspan>'
 
-def sdots(n):
+def sid(label):
+    # Map builder labels -> the element IDs today.py (svg_overwrite) writes to,
+    # so the daily GitHub-Stats auto-update actually resolves and updates them.
+    return {'repos':'repo','commits':'commit','stars':'star','followers':'follower','contributed':'contrib'}.get(label.lower(), label.lower()) + '_data'
+
+def sdots(n, idv=None):
     if n < 1: n = 1
-    return f'<tspan class="cc"> {"."*n} </tspan>'
+    inner = '.'*n
+    if idv:
+        return f'<tspan class="cc" id="{idv}"> {inner} </tspan>'
+    return f'<tspan class="cc"> {inner} </tspan>'
 
 # GitHub Stats LOC suffix (visible length drives the LOC dot count).
-LOC_SUFFIX = ' ⟩ 73,877++ | 4,165--'
+LOC_SUFFIX = ' ⟩ ↑ 73,877 | ↓ 4,165'
 # Column where '(' sits on the LOC line == column where the '⟩' separators must sit
 # on the two paired stat lines, so all three lines align vertically.
 SEP_COL = TOTAL - len(LOC_SUFFIX) + 1
@@ -53,12 +61,11 @@ def stat2(y, L1, v1, L2, v2, bracket=None):
     if d1 < 1: d1 = 1
     if d2 < 1: d2 = 1
     return (f'<tspan x="{XK}" y="{y}" class="cc">⟩ </tspan>'
-            f'<tspan class="key">{L1}</tspan>:{sdots(d1)}'
-            f'<tspan class="value" id="{L1.lower()}_data">{v1}</tspan>'
-            + (f' [<tspan class="key">{bracket[0]}</tspan>: <tspan class="value" id="{bracket[0].lower()}_data">{bracket[1]}</tspan>]' if bracket else '')
-            + f'<tspan class="cc"> ⟩ </tspan><tspan class="key">{L2}</tspan>:{sdots(d2)}'
-            f'<tspan class="cc" id="{L2.lower()}_data_dots"></tspan>'
-            f'<tspan class="value" id="{L2.lower()}_data">{v2}</tspan>')
+            f'<tspan class="key">{L1}</tspan>:{sdots(d1, sid(L1)+"_dots")}'
+            f'<tspan class="value" id="{sid(L1)}">{v1}</tspan>'
+            + (f'<tspan class="cc"> [</tspan><tspan class="key">{bracket[0]}</tspan>: <tspan class="value" id="{sid(bracket[0])}">{bracket[1]}</tspan><tspan class="cc">]</tspan>' if bracket else '')
+            + f'<tspan class="cc"> ⟩ </tspan><tspan class="key">{L2}</tspan>:{sdots(d2, sid(L2)+"_dots")}'
+            f'<tspan class="value" id="{sid(L2)}">{v2}</tspan>')
 
 def stat_loc(y):
     L='Lines of Code on GitHub'; v='69,712'
@@ -69,9 +76,9 @@ def stat_loc(y):
             f'<tspan class="cc" id="loc_data_dots"></tspan>'
             f'<tspan class="value" id="loc_data">{v}</tspan>'
             f'<tspan class="cc"> ⟩ </tspan>'
-            f'<tspan class="addColor" id="loc_add">73,877</tspan><tspan class="addColor">++</tspan>'
+            f'<tspan class="addColor">↑ </tspan><tspan class="addColor" id="loc_add">73,877</tspan>'
             f'<tspan class="cc"> | </tspan>'
-            f'<tspan class="delColor" id="loc_del">4,165</tspan><tspan class="delColor">--</tspan>')
+            f'<tspan class="delColor">↓ </tspan><tspan class="delColor" id="loc_del">4,165</tspan>')
 
 # --- row by row, explicit (23 rows, ends y=510 to match reference) ---
 rows = [
@@ -79,15 +86,15 @@ rows = [
  field(50,'OS','Windows 11, Android'),
  field(70,'Uptime','8 years, 1 month, 2 days','age_data'),
  field(90,'Host','EternalShade3D'),
- field(110,'Kernel','10.0'),
- field(130,'Tools','Blender, ComfyUI, Sublime Text, VS Code'),
- empty(150),
- field(170,'Languages.Programming','Python, JavaScript'),
- field(190,'Languages.Markup','HTML, CSS, JSON'),
- field(210,'Interests.Creative','3D Modeling, Digital Visuals'),
- empty(230),
- field(250,'Interests.Tech','AI, Hermes Agent'),
- field(270,'Tools.Extra','AntiGravity, Hermes Agent'),
+ field(110,'RAM.GPU','64GB + 16GB VRAM'),
+ field(130,'Tools','Blender, ComfyUI, Sublime Text'),
+ field(150,'Tools.Extra','Hermes Agent, VS Code, AntiGravity'),
+ empty(170),
+ field(190,'Interests.Creative','3D Modeling, Visuals, GLTF/GLB'),
+ field(210,'Languages.Programming','Python, JavaScript'),
+ field(230,'Languages.Markup','HTML, CSS, JSON'),
+ empty(250),
+ field(270,'Interests.Tech','AI, Hermes Agent'),
  section(310,'Contact'),
  field(330,'Instagram','@eternal.shade3d'),
  field(350,'TikTok','@eternal.shadeon'),
@@ -121,9 +128,9 @@ specs=[
 ]
 for src,dst,lg in specs:
     logo_lines=prep_logo(lg)
-    # each tspan needs x="15" (absolute, overrides text x; does NOT sum) so rows stack at col 15
-    logo_tspans='\n'.join(f'<tspan x="15" y="{90+i*20}">{l}</tspan>' for i,l in enumerate(logo_lines))
-    logo=f'<text x="15" y="90" fill="#c9d1d9" class="ascii">\n{logo_tspans}\n</text>'
+    # each tspan needs x="25" (absolute, overrides text x; does NOT sum) so rows stack at col 25
+    logo_tspans='\n'.join(f'<tspan x="25" y="{90+i*20}">{l}</tspan>' for i,l in enumerate(logo_lines))
+    logo=f'<text x="25" y="90" fill="#c9d1d9" class="ascii">\n{logo_tspans}\n</text>'
     t=open(src).read()
     t=re.sub(r'<text[^>]*class="ascii"[^>]*>.*?</text>', logo, t, count=1, flags=re.S)
     t=re.sub(r'<text x="390"[^>]*>.*?</text>', panel, t, count=1, flags=re.S)
