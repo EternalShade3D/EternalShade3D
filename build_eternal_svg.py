@@ -1,6 +1,7 @@
 import re, xml.dom.minidom as M
 
-BRAILLE_LOGO = r"C:\Users\Eternal\github_preview\Shadeon_LOGO_01_braille_40x20_shave5.txt"
+import os
+BRAILLE_LOGO = os.path.join(os.path.dirname(__file__), "assets", "logo_braille.txt")
 
 XK=390
 DASH='—'*47
