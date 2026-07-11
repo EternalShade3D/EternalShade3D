@@ -19,7 +19,7 @@ def dots_for(label, val):
 
 def field(y, label, val, dyn=None):
     vid=f' id="{dyn}"' if dyn else ''
-    dots=f'<tspan class="cc" id="{dyn}_dots">{dots_for(label,val)}</tspan>' if dyn else f'<tspan class="cc">{dots_for(label,val)}</tspan>'
+    dots=f'<tspan class="cc">{dots_for(label,val)}</tspan>'
     return (f'<tspan x="{XK}" y="{y}" class="cc">⟩ </tspan>'
             f'<tspan class="key">{label}</tspan>:{dots}'
             f'<tspan class="value"{vid}>{val}</tspan>')
@@ -61,10 +61,10 @@ def stat2(y, L1, v1, L2, v2, bracket=None):
     if d1 < 1: d1 = 1
     if d2 < 1: d2 = 1
     return (f'<tspan x="{XK}" y="{y}" class="cc">⟩ </tspan>'
-            f'<tspan class="key">{L1}</tspan>:{sdots(d1, sid(L1)+"_dots")}'
+            f'<tspan class="key">{L1}</tspan>:{sdots(d1)}'
             f'<tspan class="value" id="{sid(L1)}">{v1}</tspan>'
             + (f'<tspan class="cc"> [</tspan><tspan class="key">{bracket[0]}</tspan>: <tspan class="value" id="{sid(bracket[0])}">{bracket[1]}</tspan><tspan class="cc">]</tspan>' if bracket else '')
-            + f'<tspan class="cc"> ⟩ </tspan><tspan class="key">{L2}</tspan>:{sdots(d2, sid(L2)+"_dots")}'
+            + f'<tspan class="cc"> ⟩ </tspan><tspan class="key">{L2}</tspan>:{sdots(d2)}'
             f'<tspan class="value" id="{sid(L2)}">{v2}</tspan>')
 
 def stat_loc(y):
@@ -73,7 +73,6 @@ def stat_loc(y):
     if d < 1: d = 1
     return (f'<tspan x="{XK}" y="{y}" class="cc">⟩ </tspan>'
             f'<tspan class="key">{L}</tspan>:{sdots(d)}'
-            f'<tspan class="cc" id="loc_data_dots"></tspan>'
             f'<tspan class="value" id="loc_data">{v}</tspan>'
             f'<tspan class="cc"> ⟩ </tspan>'
             f'<tspan class="addColor">↑ </tspan><tspan class="addColor" id="loc_add">73,877</tspan>'
