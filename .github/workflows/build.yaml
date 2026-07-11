@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
           token: ${{ secrets.ACCESS_TOKEN }}
       - name: Get Python 3.8
         uses: actions/setup-python@v5
@@ -33,9 +33,9 @@ jobs:
         run: python today.py
       - name: Commit
         run: |-
-          git add .
-          git diff
           git config --global user.email "github-actions-bot@eternal3d.carrd.co"
           git config --global user.name "EternalShade3D/GitHub-Actions-Bot"
-          git commit -m "Updated README" -a || echo "No changes to commit"
+          git add .
+          git diff --quiet && echo "No changes to commit" || git commit -m "Updated README"
+          git pull --rebase origin main
           git push
