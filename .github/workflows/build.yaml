@@ -35,7 +35,8 @@ jobs:
         run: |-
           git config --global user.email "github-actions-bot@eternal3d.carrd.co"
           git config --global user.name "EternalShade3D/GitHub-Actions-Bot"
-          git add .
-          git diff --quiet && echo "No changes to commit" || git commit -m "Updated README"
+          # Only the SVGs are meant to be updated by this job; never the cache file.
+          git add dark_mode.svg light_mode.svg
+          git diff --cached --quiet && echo "No changes to commit" || git commit -m "Updated README"
           git pull --rebase origin main
           git push

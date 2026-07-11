@@ -337,19 +337,19 @@ def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, contrib
 
 def justify_format(root, element_id, new_text, length=0):
     """
-    Updates and formats the text of the element, and modifes the amount of dots in the previous element to justify the new text on the svg
+    Updates ONLY the value text of the element with the given id.
+
+    The dot leaders are baked into the SVG by build_eternal_svg.py, which computes
+    them for the exact 61-character layout (dots = TOTAL - 5 - len(label) - len(value)).
+    They must NOT be recomputed here: the original justify logic used hardcoded widths
+    (e.g. age=22) that wiped/misaligned the dots on custom layouts — Uptime's value
+    "8 years, 1 month, 4 days" (24 chars) > 22 zeroed its dots, and the LOC row got a
+    second, spurious dot block. Leaving the dots to the builder keeps the layout stable
+    across every daily update.
     """
     if isinstance(new_text, int):
         new_text = f"{'{:,}'.format(new_text)}"
-    new_text = str(new_text)
-    find_and_replace(root, element_id, new_text)
-    just_len = max(0, length - len(new_text))
-    if just_len <= 2:
-        dot_map = {0: '', 1: ' ', 2: '. '}
-        dot_string = dot_map[just_len]
-    else:
-        dot_string = ' ' + ('.' * just_len) + ' '
-    find_and_replace(root, f"{element_id}_dots", dot_string)
+    find_and_replace(root, element_id, str(new_text))
 
 
 def find_and_replace(root, element_id, new_text):
