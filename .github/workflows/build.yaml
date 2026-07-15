@@ -33,7 +33,7 @@ jobs:
         run: python today.py
       - name: Commit
         run: |-
-          git config --global user.email "github-actions-bot@eternal3d.carrd.co"
+          git config --global user.email "actions@users.noreply.github.com"
           git config --global user.name "EternalShade3D/GitHub-Actions-Bot"
           # Only the SVGs are meant to be updated by this job; never the cache file.
           git add dark_mode.svg light_mode.svg
