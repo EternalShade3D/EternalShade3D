@@ -39,7 +39,7 @@ text, tspan {white-space: pre;}
 <text x="390" y="30" fill="#c9d1d9">
 <tspan x="390" y="30">—————————————————————— EternalShade3D ———————————————————————</tspan>
 <tspan x="390" y="50" class="cc">⟩ </tspan><tspan class="key">OS</tspan>:<tspan class="cc"> ................................... </tspan><tspan class="value">Windows 11, Android</tspan>
-<tspan x="390" y="70" class="cc">⟩ </tspan><tspan class="key">Uptime</tspan>:<tspan class="cc"> .......................... </tspan><tspan class="value" id="age_data">8 years, 2 months, 22 days</tspan>
+<tspan x="390" y="70" class="cc">⟩ </tspan><tspan class="key">Uptime</tspan>:<tspan class="cc"> .......................... </tspan><tspan class="value" id="age_data">8 years, 2 months, 23 days</tspan>
 <tspan x="390" y="90" class="cc">⟩ </tspan><tspan class="key">Host</tspan>:<tspan class="cc"> ...................................... </tspan><tspan class="value">EternalShade3D</tspan>
 <tspan x="390" y="110" class="cc">⟩ </tspan><tspan class="key">RAM.GPU</tspan>:<tspan class="cc"> ................................. </tspan><tspan class="value">64GB + 16GB VRAM</tspan>
 <tspan x="390" y="130" class="cc">⟩ </tspan><tspan class="key">Tools</tspan>:<tspan class="cc"> ..................... </tspan><tspan class="value">Blender, ComfyUI, Sublime Text</tspan>
