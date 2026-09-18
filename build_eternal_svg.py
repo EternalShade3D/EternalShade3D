@@ -100,7 +100,7 @@ rows = [
  field(350,'TikTok','@eternal.shadeon'),
  field(370,'LinkedIn','marcio3drodrigues'),
  field(390,'Website','eternal3d.carrd.co'),
- field(410,'Email','eternalshadeon@gmail.com'),
+ field(410,'Email','eternalshade3d@gmail.com'),
  section(450,'GitHub Stats'),
  stat2(470,'Repos','14','Stars','3', bracket=('Contributed','16')),
  stat2(490,'Commits','76','Followers','0'),
