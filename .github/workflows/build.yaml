@@ -15,7 +15,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.ACCESS_TOKEN }}
+          # Use the built-in token. It cannot expire, and this job only needs to
+          # push back to its own repo, which `contents: write` above already allows.
+          # The PAT is only required by the stats step further down.
+          token: ${{ github.token }}
       - name: Get Python 3.12
         uses: actions/setup-python@v5
         with:
@@ -28,6 +31,27 @@ jobs:
           restore-keys: ${{ runner.os }}-pip-
       - name: Install dependencies
         run: python -m pip install -r cache/requirements.txt
+      - name: Verify ACCESS_TOKEN is still valid
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          # The stats step needs a fine-grained PAT because it reads account-level
+          # GraphQL data (followers, stars, watches) that github.token cannot see.
+          # PATs expire, so fail here with the actual cause instead of letting
+          # today.py throw an opaque HTTP error.
+          if [ -z "$ACCESS_TOKEN" ]; then
+            echo "::error::ACCESS_TOKEN secret is empty or unset."
+            exit 1
+          fi
+          code=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: bearer $ACCESS_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/user)
+          if [ "$code" != "200" ]; then
+            echo "::error::ACCESS_TOKEN is no longer valid (HTTP $code). Regenerate the fine-grained PAT, then run: gh secret set ACCESS_TOKEN --repo $GITHUB_REPOSITORY"
+            exit 1
+          fi
+          echo "ACCESS_TOKEN is valid."
       - name: Update README file
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
