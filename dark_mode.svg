@@ -42,8 +42,8 @@ text, tspan {white-space: pre;}
 <tspan x="390" y="70" class="cc">⟩ </tspan><tspan class="key">Uptime</tspan>:<tspan class="cc"> .......................... </tspan><tspan class="value" id="age_data">8 years, 4 months, 0 days</tspan>
 <tspan x="390" y="90" class="cc">⟩ </tspan><tspan class="key">Host</tspan>:<tspan class="cc"> ...................................... </tspan><tspan class="value">EternalShade3D</tspan>
 <tspan x="390" y="110" class="cc">⟩ </tspan><tspan class="key">RAM.GPU</tspan>:<tspan class="cc"> ................................. </tspan><tspan class="value">64GB + 16GB VRAM</tspan>
-<tspan x="390" y="130" class="cc">⟩ </tspan><tspan class="key">Tools</tspan>:<tspan class="cc"> ..................... </tspan><tspan class="value">Blender, ComfyUI, Sublime Text</tspan>
-<tspan x="390" y="150" class="cc">⟩ </tspan><tspan class="key">Tools.Extra</tspan>:<tspan class="cc"> ........... </tspan><tspan class="value">Hermes Agent, VS Code, AntiGravity</tspan>
+<tspan x="390" y="130" class="cc">⟩ </tspan><tspan class="key">Tools</tspan>:<tspan class="cc"> ............................. </tspan><tspan class="value">3D Blender, AI ComfyUI</tspan>
+<tspan x="390" y="150" class="cc">⟩ </tspan><tspan class="key">Tools.Extra</tspan>:<tspan class="cc"> ................... </tspan><tspan class="value">Hermes Agent, Sublime Text</tspan>
 <tspan x="390" y="170"/>
 <tspan x="390" y="190" class="cc">⟩ </tspan><tspan class="key">Interests.Creative</tspan>:<tspan class="cc"> ........ </tspan><tspan class="value">3D Modeling, Visuals, GLTF/GLB</tspan>
 <tspan x="390" y="210" class="cc">⟩ </tspan><tspan class="key">Languages.Programming</tspan>:<tspan class="cc"> ................. </tspan><tspan class="value">Python, JavaScript</tspan>
