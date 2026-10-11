@@ -61,7 +61,11 @@ jobs:
         run: |-
           git config --global user.email "actions@users.noreply.github.com"
           git config --global user.name "EternalShade3D/GitHub-Actions-Bot"
-          # Only the SVGs are meant to be updated by this job; never the cache file.
+          # The SVGs are the deliverable. The cache file records per-repo commit/LOC
+          # counts so the next run only re-walks repos that changed; committing it is
+          # what makes the cache work, since a fresh runner would otherwise start
+          # from an all-zeros file and re-walk every repo's full history every day.
           git add dark_mode.svg light_mode.svg
+          git add cache/*.txt
           git diff --cached --quiet && echo "No changes to commit" || git commit -m "Updated README"
           git push
